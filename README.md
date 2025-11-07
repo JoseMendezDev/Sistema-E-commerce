@@ -5,7 +5,7 @@ Sistema de comercio electrónico desarrollado en java, enfocado en programación
 
 - JDK 11 o superior
 - Apache NetBeans 25
-- SQL Server
+- SQL Server 21
 - Microsoft JDBC Driver para SQL Server 
 
 ## Configuración para Colaboradores
