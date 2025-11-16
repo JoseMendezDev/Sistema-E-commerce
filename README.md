@@ -16,3 +16,7 @@ Sistema de comercio electrónico desarrollado en java, enfocado en programación
 2. Extra el archuivo y guarda el `.jar` en una carpeta local
 3. En NetBeans: Ctrl + 5 -> Databases -> Drivers -> New Driver
 4. Agrega el archivo `.jar` descargado
+
+## UML
+
+- Diagrama UML (https://app.diagrams.net/#G1nKL0B9mNzXg9N7pQK20cnPf3wvv2S_Jo)
