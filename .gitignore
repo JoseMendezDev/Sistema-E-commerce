@@ -1,0 +1,75 @@
+# --- SISTEMA E-COMMERCE | .gitignore ---
+
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# NetBeans project files (IDE)
+nbproject/private/
+nbproject/private/*
+
+# IDE directories and files
+.idea/
+*.iml
+.vscode/
+.target/
+*.swp
+
+# Compiled source
+*.class
+*.pyc
+*.pyo
+*.exe
+*.dll
+*.out
+*.app
+*.o
+*.obj
+*.so
+
+# Coverage and test outputs
+coverage/
+*.lcov
+test-output/
+
+# Misc
+.tmp/
+*.bak
+*.orig
+*.sass-cache
+
+# Dependency directories
+jspm_packages/
+bower_components/
+
+# Others that may apply
+*.pid
+*.seed
+*.pid.lock
+
+# Package lock files
+package-lock.json
+yarn.lock
+
+# Optional: Add custom exclusions here
+# /public/uploads/
+
+# End of file
