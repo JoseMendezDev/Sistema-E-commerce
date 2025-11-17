@@ -25,6 +25,7 @@ Thumbs.db
 # NetBeans project files (IDE)
 nbproject/private/
 nbproject/private/*
+nbproject/project.properties
 
 # IDE directories and files
 .idea/
@@ -68,8 +69,5 @@ bower_components/
 # Package lock files
 package-lock.json
 yarn.lock
-
-# Optional: Add custom exclusions here
-# /public/uploads/
 
 # End of file
