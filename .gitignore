@@ -25,7 +25,6 @@ Thumbs.db
 # NetBeans project files (IDE)
 nbproject/private/
 nbproject/private/*
-nbproject/project.properties
 
 # IDE directories and files
 .idea/
