@@ -1,72 +1,96 @@
 
 package main.java.com.models.productos;
 
-import main.java.models.interfaces.IBuscable;
+import main.java.com.models.interfaces.IBuscable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class Categoria implements IBuscable<Producto>, Serializable {
+public class Producto implements IBuscable<Producto>, Serializable {
     private static final long serialVersionUID = 1L;
     
     private int id;
     private String nombre;
     private String descripcion;
-    private Categoria categoriaPadre;
-    private List<Categoria> subcategorias;
-    private List<Producto> productos;
+    private double precio;
+    private String imagen;
+    private boolean activo;
+    private Categoria categoria;
+    private Inventario inventario;
     
-    public Categoria() {
-        this.subcategorias = new ArrayList<>();
-        this.productos = new ArrayList<>();
+    public Producto() {
+        this.activo = true;
     }
     
-    public Categoria(String nombre, String descripcion) {
+    public Producto(String nombre, String descripcion, double precio, Categoria categoria) {
         this();
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.precio = precio;
+        this.categoria = categoria;
+        this.inventario = new Inventario(this, 0);
     }
     
-    public void agregarSubcategoria(Categoria subcategoria) {
-        subcategoria.setCategoriaPadre(this);
-        this.subcategorias.add(subcategoria);
-    }
-    
-    public void agregarProducto(Producto producto) {
-        if (!productos.contains(producto)) {
-            productos.add(producto);
-            producto.setCategoria(this);
+    public void actualizarPrecio(double nuevoPrecio) {
+        if (nuevoPrecio > 0) {
+            this.precio = nuevoPrecio;
         }
     }
     
-    public List<Producto> listarProductos() {
-        return new ArrayList<>(productos);
+    public void actualizarStock(int cantidad) {
+        if (inventario != null) {
+            inventario.agregarStock(cantidad);
+        }
+    }
+    
+    public boolean estaDisponible() {
+        return activo && inventario != null && inventario.getStockActual() > 0;
     }
     
     @Override
     public List<Producto> buscar(String criterio) {
-        return productos.stream()
-            .filter(p -> p.getNombre().toLowerCase().contains(criterio.toLowerCase()) ||
-                        p.getDescripcion().toLowerCase().contains(criterio.toLowerCase()))
-            .collect(Collectors.toList());
+        List<Producto> resultado = new ArrayList<>();
+        if (this.nombre.toLowerCase().contains(criterio.toLowerCase()) ||
+            this.descripcion.toLowerCase().contains(criterio.toLowerCase())) {
+            resultado.add(this);
+        }
+        return resultado;
     }
     
     @Override
     public List<Producto> filtrar(Map<String, Object> filtros) {
-        return productos.stream()
-            .filter(p -> aplicarFiltros(p, filtros))
-            .collect(Collectors.toList());
-    }
-    
-    private boolean aplicarFiltros(Producto p, Map<String, Object> filtros) {
+        List<Producto> resultado = new ArrayList<>();
+        boolean cumpleFiltros = true;
+        
         for (Map.Entry<String, Object> filtro : filtros.entrySet()) {
             switch (filtro.getKey()) {
                 case "precioMin":
-                    if (p.getPrecio() < (Double) filtro.getValue()) return false;
+                    if (this.precio < (Double) filtro.getValue()) cumpleFiltros = false;
                     break;
                 case "precioMax":
-                    if (p.getPrecio() > (Double) filtro.getValue()) return false;
+                    if (this.precio > (Double) filtro.getValue()) cumpleFiltros = false;
                     break;
-                
+            }
+        }
+        
+        if (cumpleFiltros) resultado.add(this);
+        return resultado;
+    }
+    
+    // Getters y Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getDescripcion() { return descripcion; }
+    public double getPrecio() { return precio; }
+    public String getImagen() { return imagen; }
+    public void setImagen(String imagen) { this.imagen = imagen; }
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+    public Inventario getInventario() { return inventario; }
+    public void setInventario(Inventario inventario) { this.inventario = inventario; }
+}

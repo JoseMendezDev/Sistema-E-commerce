@@ -2,7 +2,7 @@
 package main.java.com.models.productos;
 
 
-import main.java.models.interfaces.IBuscable;
+import main.java.com.models.interfaces.IBuscable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
