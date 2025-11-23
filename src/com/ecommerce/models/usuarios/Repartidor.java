@@ -1,8 +1,12 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.ecommerce.models.usuarios;
 
 import com.ecommerce.models.abstracto.Usuario;
 import com.ecommerce.models.abstracto.Transporte;
-import main.java.com.models.pedidos.Pedido;
+import com.ecommerce.models.pedidos.Pedido;
 import java.util.ArrayList;
 import java.util.List;
 
