@@ -1,7 +1,7 @@
 
-package main.java.com.models.usuarios;
+package com.ecommerce.models.usuarios;
 
-import main.java.com.models.abstracto.Usuario;
+import com.ecommerce.models.abstracto.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 

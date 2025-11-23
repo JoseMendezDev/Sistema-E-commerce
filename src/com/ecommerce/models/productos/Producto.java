@@ -1,7 +1,7 @@
 
-package main.java.com.models.productos;
+package com.ecommerce.models.productos;
 
-import main.java.com.models.interfaces.IBuscable;
+import com.ecommerce.models.interfaces.IBuscable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

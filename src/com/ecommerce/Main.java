@@ -1,5 +1,5 @@
 
-package main.java.com;
+package com.ecommerce;
 import java.util.*;
 /**
  *

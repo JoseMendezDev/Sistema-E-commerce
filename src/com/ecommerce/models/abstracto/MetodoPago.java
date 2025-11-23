@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package main.java.com.models.abstracto;
+package com.ecommerce.models.abstracto;
 
-import main.java.com.models.interfaces.IPagable;
+import com.ecommerce.models.interfaces.IPagable;
 import java.io.Serializable;
 
 /**

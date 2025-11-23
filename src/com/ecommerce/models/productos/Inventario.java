@@ -1,5 +1,5 @@
 
-package main.java.com.models.productos;
+package com.ecommerce.models.productos;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
