@@ -4,7 +4,7 @@
  */
 package com.ecommerce.models.abstracto;
 
-import com.ecommerce.models.interfaces.IAutenticable;
+import com.ecommerce.interfaces.IAutenticable;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 

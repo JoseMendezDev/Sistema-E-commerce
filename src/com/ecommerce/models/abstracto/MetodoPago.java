@@ -4,7 +4,7 @@
  */
 package com.ecommerce.models.abstracto;
 
-import com.ecommerce.models.interfaces.IPagable;
+import com.ecommerce.interfaces.IPagable;
 import java.io.Serializable;
 
 /**
