@@ -2,17 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.ecommerce.models.interfaces;
+package com.ecommerce.interfaces;
 
 /**
  *
  * @author USER
  */
-public interface IAutenticable {
+public interface IEnviable {
 
-    boolean autenticar(String email, String password);
+    double calcularCostoEnvio();
 
-    void cerrarSesion();
+    void actualizarEstadoEnvio();
 
-    boolean estaAutenticado();
+    int obtenerTiempoEstimado();
 }
