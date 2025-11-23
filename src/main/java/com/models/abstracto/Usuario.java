@@ -1,10 +1,17 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package main.java.com.models.abstracto;
 
 import main.java.com.models.interfaces.IAutenticable;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 
+/**
+ *
+ * @author USER
+ */
 public abstract class Usuario implements IAutenticable, Serializable {
     private static final long serialVersionUID = 1L;
     
