@@ -5,7 +5,16 @@ node_modules/
 
 # Build output
 dist/
+nbdist/
 build/
+nbbuild/
+
+# Drivers JDBC
+*.jar
+lib/
+
+# Configuración Local
+config.properties
 
 # Logs
 *.log
