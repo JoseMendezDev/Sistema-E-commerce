@@ -107,6 +107,10 @@ public class Categoria implements IBuscable<Producto>, Serializable {
     public String getDescripcion() {
         return descripcion;
     }
+    
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
     public Categoria getCategoriaPadre() {
         return categoriaPadre;

@@ -108,15 +108,23 @@ public class Producto implements IBuscable<Producto>, Serializable {
     public String getDescripcion() {
         return descripcion;
     }
+    
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
     public double getPrecio() {
         return precio;
+    }
+    
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
 
     public String getImagen() {
         return imagen;
     }
-
+    
     public void setImagen(String imagen) {
         this.imagen = imagen;
     }
