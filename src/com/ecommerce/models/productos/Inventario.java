@@ -17,10 +17,10 @@ public class Inventario implements Serializable {
     private int stockMinimo;
     private int stockMaximo;
     private LocalDateTime ultimaActualizacion;
-
+//Sirve para: crear inventario vacío
     public Inventario() {
     }
-
+//Crear inventario con stock inicial
     public Inventario(Producto producto, int stockInicial) {
         this.producto = producto;
         this.stockActual = stockInicial;

@@ -18,20 +18,20 @@ public class Cliente extends Usuario {
     private String direccionEnvio;
     private List<Pedido> historialPedidos;
     private CarritoCompras carrito;
-
+ //Crear un cliente con carrito y lista de pedidos.
     public Cliente() {
         super();
         this.historialPedidos = new ArrayList<>();
         this.carrito = new CarritoCompras(this);
     }
-
+    //Crear un cliente completo.
     public Cliente(String email, String password, String nombre, String telefono, String direccionEnvio) {
         super(email, password, nombre, telefono);
         this.direccionEnvio = direccionEnvio;
         this.historialPedidos = new ArrayList<>();
         this.carrito = new CarritoCompras(this);
     }
-
+    //Esta parte verifica si el carrito está vacío antes de crear el pedido.
     public Pedido realizarPedido() {
         if (carrito.getItems().isEmpty()) {
             throw new IllegalStateException("El carrito está vacío");

@@ -18,7 +18,7 @@ public abstract class MetodoPago implements IPagable, Serializable {
     protected int id;
     protected String tipo;
     protected boolean activo;
-
+//Crear un método de pago activo.
     public MetodoPago(String tipo) {
         this.tipo = tipo;
         this.activo = true;

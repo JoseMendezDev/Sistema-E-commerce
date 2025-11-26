@@ -13,19 +13,19 @@ public class Administrador extends Usuario {
     
     private String nivel;
     private List<String> permisos;
-    
+    //crear un administrador básico
     public Administrador() {
         super();
         this.permisos = new ArrayList<>();
     }
-    
+    //Crear un administrador con nivel y permisos.
     public Administrador(String email, String password, String nombre, String telefono, String nivel) {
         super(email, password, nombre, telefono);
         this.nivel = nivel;
         this.permisos = new ArrayList<>();
         inicializarPermisos();
     }
-    
+    //llenar la lista de permisos que tendrá un usuario
     private void inicializarPermisos() {
         permisos.add("GESTIONAR_PRODUCTOS");
         permisos.add("GESTIONAR_INVENTARIO");

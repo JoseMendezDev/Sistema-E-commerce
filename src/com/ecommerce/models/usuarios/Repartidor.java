@@ -18,13 +18,13 @@ public class Repartidor extends Usuario {
     private boolean enServicio;
     private List<Pedido> pedidosAsignados;
     private Transporte vehiculo;
-
+//Crear un repartidor sin datos completos.
     public Repartidor() {
         super();
         this.pedidosAsignados = new ArrayList<>();
         this.enServicio = false;
     }
-
+//Crear un repartidor listo para trabajar
     public Repartidor(String email, String password, String nombre, String telefono, String licencia, Transporte vehiculo) {
         super(email, password, nombre, telefono);
         this.licencia = licencia;
