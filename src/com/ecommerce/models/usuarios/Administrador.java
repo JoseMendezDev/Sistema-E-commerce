@@ -9,15 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Administrador extends Usuario {
+
     private static final long serialVersionUID = 1L;
-    
+
     private String nivel;
     private List<String> permisos;
-    //crear un administrador básico
+
+    //Crear un administrador básico con el constructor de la clase padre.
     public Administrador() {
         super();
         this.permisos = new ArrayList<>();
     }
+
     //Crear un administrador con nivel y permisos.
     public Administrador(String email, String password, String nombre, String telefono, String nivel) {
         super(email, password, nombre, telefono);
@@ -25,49 +28,55 @@ public class Administrador extends Usuario {
         this.permisos = new ArrayList<>();
         inicializarPermisos();
     }
-    //llenar la lista de permisos que tendrá un usuario
+
+    //Llenar la lista de permisos que tendrá un usuario
     private void inicializarPermisos() {
         permisos.add("GESTIONAR_PRODUCTOS");
         permisos.add("GESTIONAR_INVENTARIO");
         permisos.add("VER_REPORTES");
         permisos.add("GESTIONAR_USUARIOS");
     }
-    
+
     public void gestionarProductos() {
         if (tienePermiso("GESTIONAR_PRODUCTOS")) {
             System.out.println("Gestionando productos...");
         }
     }
-    
+
     public void gestionarInventario() {
         if (tienePermiso("GESTIONAR_INVENTARIO")) {
             System.out.println("Gestionando inventario...");
         }
     }
-    
+
     public void verReportes() {
         if (tienePermiso("VER_REPORTES")) {
             System.out.println("Visualizando reportes...");
         }
     }
-    
+
     public void gestionarUsuarios() {
         if (tienePermiso("GESTIONAR_USUARIOS")) {
             System.out.println("Gestionando usuarios...");
         }
     }
-    
+
     private boolean tienePermiso(String permiso) {
         return permisos.contains(permiso);
     }
-    
+
     @Override
     public void cerrarSesion() {
         this.autenticado = false;
         System.out.println("Administrador " + nombre + " ha cerrado sesión");
     }
-    
+
     // Getters y Setters
-    public String getNivel() { return nivel; }
-    public List<String> getPermisos() { return new ArrayList<>(permisos); }
+    public String getNivel() {
+        return nivel;
+    }
+
+    public List<String> getPermisos() {
+        return new ArrayList<>(permisos);
+    }
 }

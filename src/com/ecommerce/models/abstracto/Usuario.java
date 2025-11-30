@@ -23,11 +23,13 @@ public abstract class Usuario implements IAutenticable, Serializable {
     protected String telefono;
     protected LocalDateTime fechaRegistro;
     protected boolean autenticado;
+    
     //Inicializar valores básicos del usuario.
     public Usuario() {
         this.fechaRegistro = LocalDateTime.now();
         this.autenticado = false;
     }
+    
     //Crear un usuario con datos completos
     public Usuario(String email, String password, String nombre, String telefono) {
         this();

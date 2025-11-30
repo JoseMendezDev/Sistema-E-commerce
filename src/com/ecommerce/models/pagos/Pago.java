@@ -38,7 +38,7 @@ public class Pago implements Serializable {
     }
 
     private String generarNumeroTransaccion() {
-        return "TXN-" + System.currentTimeMillis();
+        return "TRANS-" + System.currentTimeMillis();
     }
 
     public boolean procesarPago() {

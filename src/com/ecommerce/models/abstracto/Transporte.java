@@ -18,7 +18,8 @@ public abstract class Transporte implements Serializable {
     protected String modelo;
     protected int capacidadKg;
     protected boolean disponible;
- //Crear un vehículo de reparto.
+    
+    //Crear un vehículo de reparto.
     public Transporte(String matricula, String modelo, int capacidadKg) {
         this.matricula = matricula;
         this.modelo = modelo;

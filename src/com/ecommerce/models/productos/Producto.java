@@ -22,11 +22,13 @@ public class Producto implements IBuscable<Producto>, Serializable {
     private boolean activo;
     private Categoria categoria;
     private Inventario inventario;
-//Crear un producto activo por defecto
+    
+    //Crear un producto activo por defecto
     public Producto() {
         this.activo = true;
     }
-//Crear un producto completo
+    
+    //Crear un producto completo
     public Producto(String nombre, String descripcion, double precio, Categoria categoria) {
         this();
         this.nombre = nombre;
