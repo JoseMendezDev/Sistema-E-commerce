@@ -37,11 +37,11 @@ public class Envio implements IEnviable, Serializable {
         this.pedido = pedido;
         this.costoEnvio = calcularCostoEnvio();
     }
-
+// crea un codigo de seguimiento
     private String generarCodigoSeguimiento() {
         return "ENV-" + System.currentTimeMillis();
     }
-
+// se guarda el repartidor se establece la fecah de envio
     public void asignarRepartidor(Repartidor repartidor) {
         this.repartidor = repartidor;
         this.fechaEnvio = LocalDateTime.now();

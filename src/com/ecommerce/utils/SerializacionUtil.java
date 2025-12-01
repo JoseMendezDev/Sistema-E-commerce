@@ -11,7 +11,7 @@ import java.io.*;
  * @author USER
  */
 public class SerializacionUtil {
-
+//Guarda un objeto en un archivo, no devuelve nada
     public static <T> void serializar(T objeto, String archivo) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(archivo))) {
             oos.writeObject(objeto);
@@ -20,7 +20,7 @@ public class SerializacionUtil {
             System.err.println("Error serializando: " + e.getMessage());
         }
     }
-
+//Restaura el objeto guardado, devuelve el objeto o null
     @SuppressWarnings("unchecked")
     public static <T> T deserializar(String archivo) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {

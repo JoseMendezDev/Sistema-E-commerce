@@ -65,12 +65,12 @@ public class CarritoCompras implements Serializable {
 
         calcularTotal();
     }
-
+//Elimina cualquier item cuyo id coincida. Luego recalcula el total del carrito
     public void removerItem(int productoId) {
         items.removeIf(item -> item.getProducto().getId() == productoId);
         calcularTotal();
     }
-
+//busca item del producto, luego verifica si el nuevo stock esta disponible si se puede actualiza la cantidad
     public void actualizarCantidad(int productoId, int nuevaCantidad) {
         items.stream()
                 .filter(item -> item.getProducto().getId() == productoId)
@@ -84,19 +84,19 @@ public class CarritoCompras implements Serializable {
                     }
                 });
     }
-
+//suma todos los subtotales, actauliza el atributo subtotal y devuelve el tota del carrito
     public double calcularTotal() {
         this.subtotal = items.stream()
                 .mapToDouble(ItemCarrito::calcularSubtotal)
                 .sum();
         return subtotal;
     }
-
+//limpia el carrito eliminando todos los items
     public void vaciar() {
         items.clear();
         subtotal = 0.0;
     }
-
+//convierte el carrito en un pedido
     public Pedido convertirAPedido() {
         if (items.isEmpty()) {
             throw new IllegalStateException("El carrito está vacío");
@@ -105,6 +105,7 @@ public class CarritoCompras implements Serializable {
         Pedido pedido = new Pedido(cliente, cliente.getDireccionEnvio());
 
         for (ItemCarrito item : items) {
+            //convierte cada item carrito en un detalle del pedido
             pedido.agregarDetalle(item.getProducto(), item.getCantidad(), item.getPrecioUnitario());
         }
 

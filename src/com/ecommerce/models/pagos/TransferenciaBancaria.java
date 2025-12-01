@@ -29,6 +29,7 @@ public class TransferenciaBancaria extends MetodoPago {
     }
 
     @Override
+    //validacion
     public boolean validar() {
         return numeroCuenta != null
                 && numeroCuenta.length() >= 10
@@ -37,6 +38,7 @@ public class TransferenciaBancaria extends MetodoPago {
     }
 
     @Override
+    //revisa si los datos bancarios son validso
     public boolean procesar(double monto) {
         if (validar() && monto > 0) {
             this.codigoTransferencia = "TRANS-" + System.currentTimeMillis();

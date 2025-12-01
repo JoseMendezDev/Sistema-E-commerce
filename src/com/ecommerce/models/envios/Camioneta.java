@@ -29,6 +29,7 @@ public class Camioneta extends Transporte implements Serializable {
     }
 
     @Override
+    //Multiplica la capacidad base por 1.5 → 50% más capacidad
     public int calcularCapacidad() {
         return (int) (capacidadKg * 1.5);
     }

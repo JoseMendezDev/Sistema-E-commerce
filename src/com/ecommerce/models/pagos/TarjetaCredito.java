@@ -33,6 +33,7 @@ public class TarjetaCredito extends MetodoPago {
     }
 
     @Override
+    //validacion de la tarjeta
     public boolean validar() {
         return numeroTarjeta != null
                 && numeroTarjeta.length() == 16
@@ -42,6 +43,7 @@ public class TarjetaCredito extends MetodoPago {
     }
 
     @Override
+    //verifica que la tarjeta sea valida
     public boolean procesar(double monto) {
         if (validar() && monto > 0) {
             System.out.println("Procesando pago con tarjeta: " + enmascarar(numeroTarjeta));
@@ -54,12 +56,13 @@ public class TarjetaCredito extends MetodoPago {
     public boolean validarPago() {
         return validar();
     }
-
+//enmascara el numero de la tarjeta
     private String enmascarar(String numero) {
         return "**** **** **** " + numero.substring(12);
     }
 
     @Override
+    //muestra el estado de pago
     public String obtenerEstadoPago() {
         return "Tarjeta valida hasta: " + fechaExpiracion;
     }
