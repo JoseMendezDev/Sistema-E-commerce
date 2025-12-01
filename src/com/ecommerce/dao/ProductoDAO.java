@@ -6,6 +6,7 @@ package com.ecommerce.dao;
 
 import com.ecommerce.models.productos.Producto;
 import com.ecommerce.models.productos.Categoria;
+import com.ecommerce.models.productos.Inventario;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class ProductoDAO extends BaseDAO<Producto> {
 
     public List<Producto> buscarPorNombre(String nombre) throws SQLException {
         List<Producto> productos = new ArrayList<>();
-        String sql = "SELECT * FROM productos WHERE nombre LIKE ? AND activo = true";
+        String sql = "SELECT * FROM productos WHERE nombre LIKE ? AND activo = 1";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, "%" + nombre + "%");
@@ -34,10 +35,7 @@ public class ProductoDAO extends BaseDAO<Producto> {
 
     @Override
     public Producto buscarPorId(int id) throws SQLException {
-        String sql = "SELECT p.*, c.nombre as categoria_nombre, c.descripcion as categoria_desc "
-                + "FROM productos p "
-                + "INNER JOIN categorias c ON p.categoria_id = c.id "
-                + "WHERE p.id = ?";
+        String sql = "EXEC sp_buscar_producto_por_id";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -54,10 +52,7 @@ public class ProductoDAO extends BaseDAO<Producto> {
     @Override
     public List<Producto> buscarTodos() throws SQLException {
         List<Producto> productos = new ArrayList<>();
-        String sql = "SELECT p.*, c.nombre as categoria_nombre, c.descripcion as categoria_desc "
-                + "FROM productos p "
-                + "INNER JOIN categorias c ON p.categoria_id = c.id "
-                + "WHERE p.activo = true";
+        String sql = "EXEC sp_productos";
 
         try (Statement stmt = conexion.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -144,6 +139,7 @@ public class ProductoDAO extends BaseDAO<Producto> {
         producto.setDescripcion(rs.getString("descripcion"));
         producto.setPrecio(rs.getDouble("precio"));
         producto.setActivo(rs.getBoolean("activo"));
+        int stockActual = rs.getInt("stock_actual");
 
         try {
             int categoriaId = rs.getInt("categoria_id");
@@ -158,6 +154,11 @@ public class ProductoDAO extends BaseDAO<Producto> {
         } catch (SQLException e) {
 
         }
+
+        Inventario inventario = new Inventario();
+        inventario.setStockActual(stockActual);
+
+        producto.setInventario(inventario);
 
         return producto;
     }
