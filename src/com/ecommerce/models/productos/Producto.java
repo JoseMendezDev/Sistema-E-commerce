@@ -18,16 +18,15 @@ public class Producto implements IBuscable<Producto>, Serializable {
     private String nombre;
     private String descripcion;
     private double precio;
-    private String imagen;
     private boolean activo;
     private Categoria categoria;
     private Inventario inventario;
-    
+
     //Crear un producto activo por defecto
     public Producto() {
         this.activo = true;
     }
-    
+
     //Crear un producto completo
     public Producto(String nombre, String descripcion, double precio, Categoria categoria) {
         this();
@@ -41,12 +40,6 @@ public class Producto implements IBuscable<Producto>, Serializable {
     public void actualizarPrecio(double nuevoPrecio) {
         if (nuevoPrecio > 0) {
             this.precio = nuevoPrecio;
-        }
-    }
-
-    public void actualizarStock(int cantidad) {
-        if (inventario != null) {
-            inventario.agregarStock(cantidad);
         }
     }
 
@@ -66,18 +59,29 @@ public class Producto implements IBuscable<Producto>, Serializable {
 
     @Override
     public List<Producto> filtrar(Map<String, Object> filtros) {
+        // Implementación de filtrado simple.
         List<Producto> resultado = new ArrayList<>();
         boolean cumpleFiltros = true;
 
         for (Map.Entry<String, Object> filtro : filtros.entrySet()) {
             switch (filtro.getKey()) {
                 case "precioMin":
-                    if (this.precio < (Double) filtro.getValue()) {
+                    if (precio < (Double) filtro.getValue()) {
                         cumpleFiltros = false;
                     }
                     break;
                 case "precioMax":
-                    if (this.precio > (Double) filtro.getValue()) {
+                    if (precio > (Double) filtro.getValue()) {
+                        cumpleFiltros = false;
+                    }
+                    break;
+                case "categoriaId":
+                    if (categoria == null || categoria.getId() != (Integer) filtro.getValue()) {
+                        cumpleFiltros = false;
+                    }
+                    break;
+                case "activo":
+                    if (activo != (Boolean) filtro.getValue()) {
                         cumpleFiltros = false;
                     }
                     break;
@@ -110,7 +114,7 @@ public class Producto implements IBuscable<Producto>, Serializable {
     public String getDescripcion() {
         return descripcion;
     }
-    
+
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
@@ -118,17 +122,9 @@ public class Producto implements IBuscable<Producto>, Serializable {
     public double getPrecio() {
         return precio;
     }
-    
+
     public void setPrecio(double precio) {
         this.precio = precio;
-    }
-
-    public String getImagen() {
-        return imagen;
-    }
-    
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
     }
 
     public boolean isActivo() {

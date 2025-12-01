@@ -9,5 +9,9 @@ package com.ecommerce.models.pagos;
  * @author USER
  */
 public enum EstadoPago {
-    PENDIENTE, PROCESANDO, COMPLETADO, FALLIDO, REEMBOLSADO
+    PENDIENTE, 
+    PROCESANDO, 
+    COMPLETADO, 
+    FALLIDO, 
+    REEMBOLSADO
 }

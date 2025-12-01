@@ -10,20 +10,10 @@ package com.ecommerce.models.pedidos;
  */
 public enum EstadoPedido {
 
-    PENDIENTE("Pendiente de confirmación"),
-    CONFIRMADO("Confirmado"),
-    PROCESANDO("Procesando"),
-    ENVIADO("Enviado"),
-    ENTREGADO("Entregado"),
-    CANCELADO("Cancelado");
-    
-    private final String descripcion;
-
-    EstadoPedido(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
+    CREADO,
+    PAGADO,
+    EN_PROCESO,
+    ENVIADO,
+    ENTREGADO,
+    CANCELADO
 }

@@ -35,6 +35,8 @@ public class Inventario implements Serializable {
         if (cantidad > 0 && stockActual + cantidad <= stockMaximo) {
             this.stockActual += cantidad;
             this.ultimaActualizacion = LocalDateTime.now();
+        } else {
+            System.err.println("Error: Cantidad inválida o excede el stock maximo.");
         }
     }
 
@@ -44,6 +46,7 @@ public class Inventario implements Serializable {
             this.ultimaActualizacion = LocalDateTime.now();
             return true;
         }
+        System.err.println("Error: No hay suficiente stock para reducir.");
         return false;
     }
 
@@ -67,15 +70,23 @@ public class Inventario implements Serializable {
     public Producto getProducto() {
         return producto;
     }
+    
+    public void setProducto(Producto producto){
+        this.producto = producto;
+    }
 
     public int getStockActual() {
         return stockActual;
+    }
+    
+    public void setStockActual(int stockActual) {
+        this.stockActual = stockActual;
     }
 
     public int getStockMinimo() {
         return stockMinimo;
     }
-
+   
     public void setStockMinimo(int stockMinimo) {
         this.stockMinimo = stockMinimo;
     }
@@ -90,5 +101,9 @@ public class Inventario implements Serializable {
 
     public LocalDateTime getUltimaActualizacion() {
         return ultimaActualizacion;
+    }
+    
+    public void setUltimaActualizacion(LocalDateTime ultimaActualizacion) {
+        this.ultimaActualizacion = ultimaActualizacion;
     }
 }

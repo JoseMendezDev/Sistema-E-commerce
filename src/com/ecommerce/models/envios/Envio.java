@@ -48,14 +48,6 @@ public class Envio implements IEnviable, Serializable {
         this.estado = EstadoEnvio.EN_TRANSITO;
     }
 
-    public void actualizarEstado(EstadoEnvio nuevoEstado) {
-        this.estado = nuevoEstado;
-
-        if (nuevoEstado == EstadoEnvio.ENTREGADO) {
-            this.fechaEntrega = LocalDateTime.now();
-        }
-    }
-
     @Override
     public double calcularCostoEnvio() {
         // Cálculo simple basado en el total del pedido
@@ -72,7 +64,7 @@ public class Envio implements IEnviable, Serializable {
 
     @Override
     public void actualizarEstadoEnvio() {
-        System.out.println("Estado de envío actualizado: " + estado);
+        System.out.println("Estado de envio actualizado: " + estado);
     }
 
     @Override
@@ -104,6 +96,10 @@ public class Envio implements IEnviable, Serializable {
     public Pedido getPedido() {
         return pedido;
     }
+    
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
 
     public Repartidor getRepartidor() {
         return repartidor;
@@ -127,5 +123,29 @@ public class Envio implements IEnviable, Serializable {
 
     public String getCodigoSeguimiento() {
         return codigoSeguimiento;
+    }
+
+    public void setRepartidor(Repartidor repartidor) {
+        this.repartidor = repartidor;
+    }
+
+    public void setEstado(EstadoEnvio estado) {
+        this.estado = estado;
+    }
+
+    public void setFechaEnvio(LocalDateTime fechaEnvio) {
+        this.fechaEnvio = fechaEnvio;
+    }
+
+    public void setFechaEntrega(LocalDateTime fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
+    }
+
+    public void setCostoEnvio(double costoEnvio) {
+        this.costoEnvio = costoEnvio;
+    }
+
+    public void setCodigoSeguimiento(String codigoSeguimiento) {
+        this.codigoSeguimiento = codigoSeguimiento;
     }
 }

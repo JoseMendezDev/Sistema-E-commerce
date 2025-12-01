@@ -9,5 +9,9 @@ package com.ecommerce.models.envios;
  * @author USER
  */
 public enum EstadoEnvio {
-    PREPARANDO, EN_TRANSITO, EN_REPARTO, ENTREGADO, DEVUELTO
+    PREPARANDO, 
+    EN_TRANSITO, 
+    EN_REPARTO, 
+    ENTREGADO, 
+    DEVUELTO
 }

@@ -63,7 +63,7 @@ public class Categoria implements IBuscable<Producto>, Serializable {
                 .filter(p -> aplicarFiltros(p, filtros))
                 .collect(Collectors.toList());
     }
-
+    
     private boolean aplicarFiltros(Producto p, Map<String, Object> filtros) {
         for (Map.Entry<String, Object> filtro : filtros.entrySet()) {
             switch (filtro.getKey()) {

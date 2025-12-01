@@ -23,18 +23,17 @@ public class Pedido implements Serializable {
 
     private int id;
     private Cliente cliente;
-    private List<DetallePedido> detalles;
-    private EstadoPedido estado;
-    private double total;
-    private LocalDateTime fechaPedido;
     private String direccionEnvio;
-    private Pago pago;
-    private Envio envio;
+    private List<DetallePedido> detalles;
+    private double total;
+    private EstadoPedido estado;
+    private LocalDateTime fechaPedido;
 
     public Pedido() {
         this.detalles = new ArrayList<>();
-        this.estado = EstadoPedido.PENDIENTE;
         this.fechaPedido = LocalDateTime.now();
+        this.estado = EstadoPedido.CREADO;
+        calcularTotal();
     }
 
     public Pedido(Cliente cliente, String direccionEnvio) {
@@ -45,99 +44,69 @@ public class Pedido implements Serializable {
 
     public void agregarDetalle(Producto producto, int cantidad, double precioUnitario) {
         DetallePedido detalle = new DetallePedido(producto, cantidad, precioUnitario);
-        detalles.add(detalle);
+        this.detalles.add(detalle);
         calcularTotal();
     }
 
+    //Monto total del pedido sumando los subtotales de los detalles.
     public double calcularTotal() {
         this.total = detalles.stream()
-                .mapToDouble(DetallePedido::calcularSubtotal)
-                .sum();
-
-        if (envio != null) {
-            this.total += envio.getCostoEnvio();
-        }
-
-        return total;
+                           .mapToDouble(DetallePedido::calcularSubtotal)
+                           .sum();
+        return this.total;
     }
 
     public void actualizarEstado(EstadoPedido nuevoEstado) {
         this.estado = nuevoEstado;
-        System.out.println("Pedido #" + id + " actualizado a: " + nuevoEstado.getDescripcion());
-    }
-
-    public boolean cancelar() {
-        if (estado == EstadoPedido.PENDIENTE || estado == EstadoPedido.CONFIRMADO) {
-            this.estado = EstadoPedido.CANCELADO;
-
-            // Devolver stock al inventario
-            for (DetallePedido detalle : detalles) {
-                detalle.getProducto().getInventario().agregarStock(detalle.getCantidad());
-            }
-
-            return true;
-        }
-        return false;
-    }
-
-    public void confirmar() {
-        if (estado == EstadoPedido.PENDIENTE) {
-            // Reducir stock del inventario
-            for (DetallePedido detalle : detalles) {
-                detalle.getProducto().getInventario().reducirStock(detalle.getCantidad());
-            }
-
-            this.estado = EstadoPedido.CONFIRMADO;
-        }
     }
 
     // Getters y Setters
+    
     public int getId() {
         return id;
     }
-
-    public void setId(int id) {
+    
+    public void setId(int id){
         this.id = id;
     }
-
-    public Cliente getCliente() {
+    
+    public Cliente getCliente(){
         return cliente;
     }
+    
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+        
+    public LocalDateTime getFechaPedido() {
+        return fechaPedido;
+    }
 
-    public List<DetallePedido> getDetalles() {
-        return new ArrayList<>(detalles);
+    public void setFechaPedido(LocalDateTime fechaPedido) {
+        this.fechaPedido = fechaPedido;
     }
 
     public EstadoPedido getEstado() {
         return estado;
     }
 
-    public double getTotal() {
-        return total;
-    }
-
-    public LocalDateTime getFechaPedido() {
-        return fechaPedido;
+    public void setEstado(EstadoPedido estado) {
+        this.estado = estado;
     }
 
     public String getDireccionEnvio() {
         return direccionEnvio;
     }
 
-    public Pago getPago() {
-        return pago;
+    public void setDireccionEnvio(String direccionEnvio) {
+        this.direccionEnvio = direccionEnvio;
     }
 
-    public void setPago(Pago pago) {
-        this.pago = pago;
+    public double getTotal() {
+        return total;
     }
 
-    public Envio getEnvio() {
-        return envio;
-    }
-
-    public void setEnvio(Envio envio) {
-        this.envio = envio;
-        calcularTotal();
+    public void setTotal(double total) {
+        this.total = total;
     }
 }

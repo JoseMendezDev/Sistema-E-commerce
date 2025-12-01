@@ -6,6 +6,7 @@ package com.ecommerce.models.pagos;
 
 import com.ecommerce.models.abstracto.MetodoPago;
 import com.ecommerce.models.pedidos.Pedido;
+import com.ecommerce.models.pedidos.EstadoPedido;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -42,9 +43,13 @@ public class Pago implements Serializable {
     }
 
     public boolean procesarPago() {
+        this.estado = EstadoPago.PROCESANDO;
         if (metodoPago.validar() && metodoPago.procesar(monto)) {
             this.estado = EstadoPago.COMPLETADO;
             this.fechaPago = LocalDateTime.now();
+            if (this.pedido != null) {
+                this.pedido.actualizarEstado(EstadoPedido.PAGADO);
+            }
             return true;
         }
         this.estado = EstadoPago.FALLIDO;
@@ -59,6 +64,9 @@ public class Pago implements Serializable {
         if (estado == EstadoPago.COMPLETADO) {
             this.estado = EstadoPago.REEMBOLSADO;
             System.out.println("Pago reembolsado: " + numeroTransaccion);
+            if (this.pedido != null) {
+                this.pedido.actualizarEstado(EstadoPedido.CANCELADO); // Asumiendo que el reembolso cancela el pedido
+            }
             return true;
         }
         return false;
@@ -84,16 +92,32 @@ public class Pago implements Serializable {
     public double getMonto() {
         return monto;
     }
+    
+    public void setMonto(double monto) {
+        this.monto = monto;
+    }
 
     public EstadoPago getEstado() {
         return estado;
+    }
+    
+    public void setEstado(EstadoPago estado) {
+        this.estado = estado;
     }
 
     public LocalDateTime getFechaPago() {
         return fechaPago;
     }
+    
+    public void setFechaPago(LocalDateTime fechaPago) {
+        this.fechaPago = fechaPago;
+    }
 
     public String getNumeroTransaccion() {
         return numeroTransaccion;
+    }
+    
+    public void setNumeroTransaccion(String numeroTransaccion) {
+        this.numeroTransaccion = numeroTransaccion;
     }
 }

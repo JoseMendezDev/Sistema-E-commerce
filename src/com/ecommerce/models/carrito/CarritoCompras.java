@@ -44,38 +44,43 @@ public class CarritoCompras implements Serializable {
         }
 
         if (!producto.getInventario().verificarDisponibilidad(cantidad)) {
-            throw new IllegalStateException("Stock insuficiente");
+            throw new IllegalArgumentException("Cantidad solicitada excede el stock disponible: " + producto.getInventario().getStockActual());
         }
 
-        Optional<ItemCarrito> itemExistente = items.stream()
-                .filter(i -> i.getProducto().getId() == producto.getId())
+        Optional<ItemCarrito> existingItem = items.stream()
+                .filter(item -> item.getProducto().getId() == producto.getId())
                 .findFirst();
 
-        if (itemExistente.isPresent()) {
-            itemExistente.get().actualizarCantidad(
-                    itemExistente.get().getCantidad() + cantidad
-            );
+        if (existingItem.isPresent()) {
+            ItemCarrito item = existingItem.get();
+            int nuevaCantidad = item.getCantidad() + cantidad;
+            if (producto.getInventario().verificarDisponibilidad(nuevaCantidad)) {
+                item.actualizarCantidad(nuevaCantidad);
+            } else {
+                throw new IllegalArgumentException("La cantidad total excede el stock disponible.");
+            }
         } else {
-            ItemCarrito nuevoItem = new ItemCarrito(producto, cantidad, producto.getPrecio());
-            items.add(nuevoItem);
+            items.add(new ItemCarrito(producto, cantidad, producto.getPrecio()));
         }
 
         calcularTotal();
     }
 
-    public void eliminarItem(int itemId) {
-        items.removeIf(item -> item.getId() == itemId);
+    public void removerItem(int productoId) {
+        items.removeIf(item -> item.getProducto().getId() == productoId);
         calcularTotal();
     }
 
-    public void actualizarCantidad(int itemId, int nuevaCantidad) {
+    public void actualizarCantidad(int productoId, int nuevaCantidad) {
         items.stream()
-                .filter(i -> i.getId() == itemId)
+                .filter(item -> item.getProducto().getId() == productoId)
                 .findFirst()
                 .ifPresent(item -> {
                     if (item.getProducto().getInventario().verificarDisponibilidad(nuevaCantidad)) {
                         item.actualizarCantidad(nuevaCantidad);
                         calcularTotal();
+                    } else {
+                        System.err.println("No se puede actualizar la cantidad: stock insuficiente.");
                     }
                 });
     }
