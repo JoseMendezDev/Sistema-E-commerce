@@ -35,7 +35,7 @@ public class ProductoDAO extends BaseDAO<Producto> {
 
     @Override
     public Producto buscarPorId(int id) throws SQLException {
-        String sql = "EXEC sp_buscar_producto_por_id";
+        String sql = "EXEC sp_buscar_producto_por_id @id_producto = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -129,6 +129,49 @@ public class ProductoDAO extends BaseDAO<Producto> {
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
+        }
+    }
+    
+    public boolean actualizarStock(int productoId, int nuevoStock) throws SQLException {
+        String sql = "EXEC sp_actualizar_stock @producto_id = ?, @nuevo_stock = ?";
+        
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, productoId);
+            ps.setInt(2, nuevoStock);
+            
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            String sqlDirecto = "UPDATE inventario SET stock_actual = ? WHERE producto_id = ?";
+            
+            try (PreparedStatement ps = conexion.prepareStatement(sqlDirecto)) {
+                ps.setInt(1, nuevoStock);
+                ps.setInt(2, productoId);
+                
+                return ps.executeUpdate() > 0;
+            }
+        }
+    }
+    
+    public boolean reducirStock(int productoId, int cantidad) throws SQLException {
+        String sql = "EXEC sp_reducir_stock @producto_id = ?, @cantidad = ?";
+        
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, productoId);
+            ps.setInt(2, cantidad);
+            
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            // Fallback a consulta directa
+            String sqlDirecto = "UPDATE inventario SET stock_actual = stock_actual - ? " +
+                               "WHERE producto_id = ? AND stock_actual >= ?";
+            
+            try (PreparedStatement ps = conexion.prepareStatement(sqlDirecto)) {
+                ps.setInt(1, cantidad);
+                ps.setInt(2, productoId);
+                ps.setInt(3, cantidad);
+                
+                return ps.executeUpdate() > 0;
+            }
         }
     }
 

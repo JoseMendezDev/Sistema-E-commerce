@@ -6,10 +6,15 @@ package com.ecommerce.models.usuarios;
 
 import com.ecommerce.models.abstracto.Usuario;
 import com.ecommerce.models.carrito.CarritoCompras;
+import com.ecommerce.models.carrito.ItemCarrito;
 import com.ecommerce.models.pedidos.Pedido;
+import com.ecommerce.models.pedidos.DetallePedido;
+import com.ecommerce.models.pedidos.EstadoPedido;
 import com.ecommerce.models.productos.Producto;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Cliente extends Usuario {
 
@@ -18,12 +23,13 @@ public class Cliente extends Usuario {
     private String direccionEnvio;
     private List<Pedido> historialPedidos;
     private CarritoCompras carrito;
+    private boolean activo = true;
 
-    //Crear un cliente con carrito y lista de pedidos.
     public Cliente() {
         super();
         this.historialPedidos = new ArrayList<>();
         this.carrito = new CarritoCompras(this);
+        this.activo = true;
     }
 
     //Crear un cliente completo.
@@ -32,15 +38,31 @@ public class Cliente extends Usuario {
         this.direccionEnvio = direccionEnvio;
         this.historialPedidos = new ArrayList<>();
         this.carrito = new CarritoCompras(this);
+        this.activo = true;
     }
 
     //Esta parte verifica si el carrito está vacío antes de crear el pedido.
     public Pedido realizarPedido() {
+        
         if (carrito.getItems().isEmpty()) {
-            throw new IllegalStateException("El carrito está vacío");
+            throw new IllegalStateException("No se puede realizar un pedido con el carrito vacío");
         }
-        Pedido pedido = carrito.convertirAPedido();
+        
+        Pedido pedido = new Pedido();
+        pedido.setCliente(this);
+        pedido.setFechaPedido(LocalDateTime.now());
+        pedido.setEstado(EstadoPedido.CREADO);
+        pedido.setTotal(carrito.calcularTotal());
+
+        // Agregar items del carrito al pedido
+        for (ItemCarrito item : carrito.getItems()) {
+            pedido.agregarDetalle(item.getProducto(), item.getCantidad());
+        }
+
+        // Vaciar carrito después de crear el pedido
         historialPedidos.add(pedido);
+        carrito.vaciar();
+
         return pedido;
     }
 
@@ -73,5 +95,13 @@ public class Cliente extends Usuario {
 
     public List<Pedido> getHistorialPedidos() {
         return historialPedidos;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }

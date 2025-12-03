@@ -143,22 +143,48 @@ public class Main {
                 System.out.println("Tu Direccion de Envío es: " + clienteLogeado.getDireccionEnvio());
                 ejecutarMenuCliente(clienteLogeado);
             } else {
+                if (clienteDAO.existeEmail(email)) {
+                    Cliente clienteInactivo = clienteDAO.buscarPorEmail(email);
 
-                System.out.println("Error de Inicio de Sesion. Email o contrasena incorrectos.");
+                    if (clienteInactivo != null) {
+                        if (clienteDAO.verificarCredenciales(email, password)) {
+                            System.out.println("\n¡Su cuenta se encuentra INACTIVA!");
+                            System.out.print("¿Desea reactivar su cuenta? (s/n): ");
+                            String respuesta = scanner.nextLine();
+
+                            if (respuesta.equalsIgnoreCase("s")) {
+                                if (clienteDAO.reactivarCuenta(clienteInactivo.getId())) {
+                                    System.out.println("¡Cuenta reactivada exitosamente!");
+                                    System.out.println("Bienvenido/a de nuevo: " + clienteInactivo.getNombre());
+                                    ejecutarMenuCliente(clienteInactivo);
+                                } else {
+                                    System.out.println("Error al reactivar la cuenta. Contacte al administrador.");
+                                }
+                            } else {
+                                System.out.println("La cuenta permanecerá inactiva.");
+                            }
+                        } else {
+                            System.out.println("Error de Inicio de Sesion. Contraseña incorrecta.");
+                        }
+                    } else {
+                        System.out.println("Error de Inicio de Sesion. Email o contraseña incorrectos.");
+                    }
+                } else {
+                    System.out.println("Error de Inicio de Sesion. Email o contraseña incorrectos.");
+                }
             }
         } catch (SQLException e) {
             System.err.println("Error de conexion/operacion con la base de datos:");
             System.err.println("Código de Error: " + e.getSQLState());
             System.err.println("Mensaje: " + e.getMessage());
-
         } catch (Exception e) {
             System.err.println("Ocurrio un error inesperado durante el login: " + e.getMessage());
-
         }
     }
-    
+
     private static void ejecutarMenuCliente(Cliente cliente) {
         int opcion = -1;
+        boolean salirMenu = false;
 
         System.out.println("--- Sesión iniciada como Cliente: " + cliente.getNombre() + " ---");
 
@@ -185,6 +211,12 @@ public class Main {
                         break;
                     case 6:
                         miPerfil(cliente);
+                        break;
+                    case 7:
+                        if (eliminarCuenta(cliente)) {
+                        salirMenu = true;
+                        opcion = 0;
+                    }
                         break;
                     case 0:
                         cliente.cerrarSesion();
@@ -217,6 +249,7 @@ public class Main {
         System.out.println("4. Ver carrito");
         System.out.println("5. Realizar pedido");
         System.out.println("6. Mi perfil");
+        System.out.println("7. Eliminar cuenta");
         System.out.println("0. Cerrar sesion");
         System.out.print("Seleccione una opción: ");
     }
@@ -247,8 +280,88 @@ public class Main {
                     p.getInventario() != null ? p.getInventario().getStockActual() : 0));
         }
     }
-
+    
     private static void agregarAlCarrito(Cliente cliente) throws SQLException {
+    try {
+        System.out.print("Ingrese el ID del producto a agregar: ");
+        String input = scanner.nextLine();
+        
+        if (input.isEmpty()) {
+            System.out.println("Error: Debe ingresar un ID.");
+            return;
+        }
+        
+        int productoId;
+        try {
+            productoId = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: El ID debe ser un número.");
+            return;
+        }
+        
+        System.out.print("Ingrese la cantidad: ");
+        input = scanner.nextLine();
+        
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: La cantidad debe ser un número.");
+            return;
+        }
+        
+        if (cantidad <= 0) {
+            System.out.println("Error: La cantidad debe ser mayor a 0.");
+            return;
+        }
+        
+        System.out.println("Buscando producto ID: " + productoId + "...");
+        
+        // Buscar producto
+        Producto producto = productoDAO.buscarPorId(productoId);
+        
+        if (producto == null) {
+            System.out.println("Error: Producto no encontrado.");
+            System.out.println("Verifique que el ID sea correcto y el producto esté activo.");
+            return;
+        }
+        
+        System.out.println("Producto encontrado: " + producto.getNombre());
+        
+        // Verificar stock
+        int stockDisponible = 0;
+        if (producto.getInventario() != null) {
+            stockDisponible = producto.getInventario().getStockActual();
+        }
+        
+        if (stockDisponible < cantidad) {
+            System.out.println("Error: Stock insuficiente.");
+            System.out.println("Stock disponible: " + stockDisponible);
+            System.out.println("Cantidad solicitada: " + cantidad);
+            return;
+        }
+        
+        // Agregar al carrito
+        try {
+            cliente.agregarAlCarrito(producto, cantidad);
+            System.out.println("Producto agregado al carrito exitosamente!");
+            System.out.println("Producto: " + producto.getNombre());
+            System.out.println("Cantidad: " + cantidad);
+            System.out.println("Precio unitario: S/." + producto.getPrecio());
+            System.out.println("Subtotal: S/." + (producto.getPrecio() * cantidad));
+            
+        } catch (IllegalStateException e) {
+            System.out.println("Error al agregar al carrito: " + e.getMessage());
+        }
+        
+    } catch (SQLException e) {
+        System.err.println("Error de base de datos:");
+        System.err.println("Mensaje: " + e.getMessage());
+        System.err.println("Por favor, intente nuevamente.");
+    }
+}
+
+    /*private static void agregarAlCarrito(Cliente cliente) throws SQLException {
         System.out.print("Ingrese el ID del producto a agregar: ");
         int productoId = Integer.parseInt(scanner.nextLine());
         System.out.print("Ingrese la cantidad: ");
@@ -267,6 +380,7 @@ public class Main {
             System.out.println("Producto no encontrado.");
         }
     }
+*/
 
     private static void verCarrito(Cliente cliente) {
         System.out.println("\n--- MI CARRITO DE COMPRAS ---");
@@ -304,5 +418,28 @@ public class Main {
         System.out.println("Telefono: " + cliente.getTelefono());
         System.out.println("Dirección de Envio: " + cliente.getDireccionEnvio());
         System.out.println("Fecha de Registro: " + cliente.getFechaRegistro());
+    }
+
+    private static boolean eliminarCuenta(Cliente cliente) {
+        System.out.print("¿Está seguro que desea desactivar su cuenta? (s/n): ");
+        String respuesta = scanner.nextLine();
+
+        if (respuesta.equalsIgnoreCase("s")) {
+            try {
+                if (clienteDAO.eliminar(cliente.getId())) {
+                    System.out.println("Cuenta desactivada exitosamente. Vuelva pronto.");
+                    System.out.println("Sesión cerrada.");
+                    return true;
+                } else {
+                    System.out.println("Error al desactivar la cuenta.");
+                }
+            } catch (SQLException e) {
+                System.err.println("Error de base de datos: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Operación cancelada.");
+        }
+
+        return false;
     }
 }

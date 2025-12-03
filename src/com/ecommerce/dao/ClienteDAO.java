@@ -35,6 +35,7 @@ public class ClienteDAO extends BaseDAO<Cliente> {
         return null;
     }
 
+    //TODO: Implementar
     public Cliente buscarPorEmail(String email) throws SQLException {
         String sql = "SELECT * FROM clientes WHERE email = ?";
         PreparedStatement ps = null;
@@ -54,6 +55,7 @@ public class ClienteDAO extends BaseDAO<Cliente> {
         return null;
     }
 
+    //TODO: IMPLEMENTAR sp buscarTodos para administrador
     @Override
     public List<Cliente> buscarTodos() throws SQLException {
         List<Cliente> clientes = new ArrayList<>();
@@ -67,7 +69,7 @@ public class ClienteDAO extends BaseDAO<Cliente> {
         }
         return clientes;
     }
-    
+
     @Override
     public boolean insertar(Cliente cliente) throws SQLException {
         String sql = "INSERT INTO clientes (email, password, nombre, telefono, direccion_envio) VALUES (?, ?, ?, ?, ?)";
@@ -94,7 +96,7 @@ public class ClienteDAO extends BaseDAO<Cliente> {
     }
 
     public Cliente autenticar(String email, String password) throws SQLException {
-        String sql = "SELECT * FROM clientes WHERE email = ? AND password = ?";
+        String sql = "SELECT * FROM clientes WHERE email = ? AND password = ? AND activo = 1;";
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -112,7 +114,24 @@ public class ClienteDAO extends BaseDAO<Cliente> {
         }
         return null;
     }
-    
+
+    public boolean verificarCredenciales(String email, String password) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM clientes WHERE email = ? AND password = ?";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    //TODO : IMPLEMENTAR EN MENU
     @Override
     public boolean actualizar(Cliente cliente) throws SQLException {
         String sql = "UPDATE clientes SET email = ?, password = ?, nombre = ?, telefono = ?, direccion_envio = ? WHERE id = ?";
@@ -145,11 +164,20 @@ public class ClienteDAO extends BaseDAO<Cliente> {
 
     @Override
     public boolean eliminar(int id) throws SQLException {
-        String sql = "DELETE FROM clientes WHERE id = ?";
+        String sql = "UPDATE clientes SET activo = 0 WHERE id = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean reactivarCuenta(int id) throws SQLException {
+        String sql = "UPDATE clientes SET activo = 1 WHERE id = ?";
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
         }
     }
 
@@ -161,6 +189,12 @@ public class ClienteDAO extends BaseDAO<Cliente> {
         cliente.setNombre(rs.getString("nombre"));
         cliente.setTelefono(rs.getString("telefono"));
         cliente.setDireccionEnvio(rs.getString("direccion_envio"));
+
+        try {
+            cliente.setActivo(rs.getBoolean("activo"));
+        } catch (SQLException e) {
+            cliente.setActivo(true);
+        }
 
         return cliente;
     }
