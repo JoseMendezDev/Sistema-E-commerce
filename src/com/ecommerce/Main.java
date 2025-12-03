@@ -361,35 +361,14 @@ public class Main {
     }
 }
 
-    /*private static void agregarAlCarrito(Cliente cliente) throws SQLException {
-        System.out.print("Ingrese el ID del producto a agregar: ");
-        int productoId = Integer.parseInt(scanner.nextLine());
-        System.out.print("Ingrese la cantidad: ");
-        int cantidad = Integer.parseInt(scanner.nextLine());
-
-        Producto producto = productoDAO.buscarPorId(productoId);
-
-        if (producto != null) {
-            try {
-                cliente.agregarAlCarrito(producto, cantidad);
-                System.out.println("Producto agregado al carrito.");
-            } catch (IllegalStateException e) {
-                System.out.println("Error al agregar al carrito: " + e.getMessage());
-            }
-        } else {
-            System.out.println("Producto no encontrado.");
-        }
-    }
-*/
-
     private static void verCarrito(Cliente cliente) {
         System.out.println("\n--- MI CARRITO DE COMPRAS ---");
         cliente.getCarrito().getItems().forEach(item
-                -> System.out.printf("ID Prod: %d | Nombre: %s | Cantidad: %d | Precio Unitario: $%.2f | Subtotal: $%.2f\n",
+                -> System.out.printf("ID Prod: %d | Nombre: %s | Cantidad: %d | Precio Unitario: S/.%.2f | Subtotal: S/.%.2f\n",
                         item.getProducto().getId(), item.getProducto().getNombre(), item.getCantidad(),
                         item.getPrecioUnitario(), item.calcularSubtotal()));
 
-        System.out.printf("SUBTOTAL: $%.2f\n", cliente.getCarrito().calcularTotal());
+        System.out.printf("SUBTOTAL: S/.%.2f\n", cliente.getCarrito().calcularTotal());
     }
 
     private static void realizarPedido(Cliente cliente) throws SQLException {

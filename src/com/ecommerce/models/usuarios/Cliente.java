@@ -53,6 +53,7 @@ public class Cliente extends Usuario {
         pedido.setFechaPedido(LocalDateTime.now());
         pedido.setEstado(EstadoPedido.CREADO);
         pedido.setTotal(carrito.calcularTotal());
+        pedido.setDireccionEnvio(this.direccionEnvio);
 
         // Agregar items del carrito al pedido
         for (ItemCarrito item : carrito.getItems()) {
