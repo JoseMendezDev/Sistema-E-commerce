@@ -4,72 +4,33 @@
  */
 package com.ecommerce.models.pagos;
 
-import com.ecommerce.models.abstracto.MetodoPago;
-import com.ecommerce.models.pedidos.Pedido;
-import com.ecommerce.models.pedidos.EstadoPedido;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  *
  * @author USER
  */
-public class Pago implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Pago {
 
     private int id;
-    private Pedido pedido;
-    private MetodoPago metodoPago;
+    private int pedidoId;
+    private String metodoPago;
     private double monto;
-    private EstadoPago estado;
+    private String estado;
     private LocalDateTime fechaPago;
+    private String detalles;
     private String numeroTransaccion;
 
     public Pago() {
-        this.estado = EstadoPago.PENDIENTE;
+        this.fechaPago = LocalDateTime.now();
+        this.estado = "PEDIENTE";
     }
 
-    public Pago(Pedido pedido, MetodoPago metodoPago, double monto) {
+    public Pago(int pedido, String metodoPago, double monto) {
         this();
-        this.pedido = pedido;
+        this.pedidoId = pedidoId;
         this.metodoPago = metodoPago;
         this.monto = monto;
-        this.numeroTransaccion = generarNumeroTransaccion();
-    }
-
-    private String generarNumeroTransaccion() {
-        return "TRANS-" + System.currentTimeMillis();
-    }
-
-    public boolean procesarPago() {
-        this.estado = EstadoPago.PROCESANDO;
-        if (metodoPago.validar() && metodoPago.procesar(monto)) {
-            this.estado = EstadoPago.COMPLETADO;
-            this.fechaPago = LocalDateTime.now();
-            if (this.pedido != null) {
-                this.pedido.actualizarEstado(EstadoPedido.PAGADO);
-            }
-            return true;
-        }
-        this.estado = EstadoPago.FALLIDO;
-        return false;
-    }
-
-    public boolean validarPago() {
-        return metodoPago.validar() && monto > 0;
-    }
-
-    public boolean reembolsar() {
-        if (estado == EstadoPago.COMPLETADO) {
-            this.estado = EstadoPago.REEMBOLSADO;
-            System.out.println("Pago reembolsado: " + numeroTransaccion);
-            if (this.pedido != null) {
-                this.pedido.actualizarEstado(EstadoPedido.CANCELADO); // Asumiendo que el reembolso cancela el pedido
-            }
-            return true;
-        }
-        return false;
     }
 
     // Getters y Setters
@@ -81,43 +42,64 @@ public class Pago implements Serializable {
         this.id = id;
     }
 
-    public Pedido getPedido() {
-        return pedido;
+    public int getPedidoId() {
+        return pedidoId;
     }
 
-    public MetodoPago getMetodoPago() {
+    public void setPedidoId(int pedidoId) {
+        this.pedidoId = pedidoId;
+    }
+
+    public String getMetodoPago() {
         return metodoPago;
+    }
+
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
     }
 
     public double getMonto() {
         return monto;
     }
-    
+
     public void setMonto(double monto) {
         this.monto = monto;
     }
 
-    public EstadoPago getEstado() {
+    public String getEstado() {
         return estado;
     }
-    
-    public void setEstado(EstadoPago estado) {
+
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 
     public LocalDateTime getFechaPago() {
         return fechaPago;
     }
-    
+
     public void setFechaPago(LocalDateTime fechaPago) {
         this.fechaPago = fechaPago;
+    }
+
+    public String getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(String detalles) {
+        this.detalles = detalles;
     }
 
     public String getNumeroTransaccion() {
         return numeroTransaccion;
     }
-    
+
     public void setNumeroTransaccion(String numeroTransaccion) {
         this.numeroTransaccion = numeroTransaccion;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Pago #%d - Pedido: #%d - Monto: S/.%.2f - Estado %s", id, pedidoId, monto, estado);
     }
 }

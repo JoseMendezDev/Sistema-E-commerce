@@ -24,42 +24,21 @@ public class Envio implements IEnviable, Serializable {
     private EstadoEnvio estado;
     private LocalDateTime fechaEnvio;
     private LocalDateTime fechaEntrega;
-    private double costoEnvio;
-    private String codigoSeguimiento;
 
     public Envio() {
         this.estado = EstadoEnvio.PREPARANDO;
-        this.codigoSeguimiento = generarCodigoSeguimiento();
     }
 
     public Envio(Pedido pedido) {
         this();
         this.pedido = pedido;
-        this.costoEnvio = calcularCostoEnvio();
     }
-// crea un codigo de seguimiento
-    private String generarCodigoSeguimiento() {
-        return "ENV-" + System.currentTimeMillis();
-    }
-// se guarda el repartidor se establece la fecah de envio
+
+    // se guarda el repartidor se establece la fecha de envio
     public void asignarRepartidor(Repartidor repartidor) {
         this.repartidor = repartidor;
         this.fechaEnvio = LocalDateTime.now();
         this.estado = EstadoEnvio.EN_TRANSITO;
-    }
-
-    @Override
-    public double calcularCostoEnvio() {
-        // Cálculo simple basado en el total del pedido
-        double total = pedido.getTotal();
-
-        if (total > 100) {
-            return 0.0; // Envío gratis
-        } else if (total > 50) {
-            return 5.0;
-        } else {
-            return 10.0;
-        }
     }
 
     @Override
@@ -117,14 +96,6 @@ public class Envio implements IEnviable, Serializable {
         return fechaEntrega;
     }
 
-    public double getCostoEnvio() {
-        return costoEnvio;
-    }
-
-    public String getCodigoSeguimiento() {
-        return codigoSeguimiento;
-    }
-
     public void setRepartidor(Repartidor repartidor) {
         this.repartidor = repartidor;
     }
@@ -139,13 +110,5 @@ public class Envio implements IEnviable, Serializable {
 
     public void setFechaEntrega(LocalDateTime fechaEntrega) {
         this.fechaEntrega = fechaEntrega;
-    }
-
-    public void setCostoEnvio(double costoEnvio) {
-        this.costoEnvio = costoEnvio;
-    }
-
-    public void setCodigoSeguimiento(String codigoSeguimiento) {
-        this.codigoSeguimiento = codigoSeguimiento;
-    }
+    }  
 }

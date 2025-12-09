@@ -7,7 +7,6 @@ package com.ecommerce.models.carrito;
 import com.ecommerce.models.usuarios.Cliente;
 import com.ecommerce.models.productos.Producto;
 import com.ecommerce.models.pedidos.Pedido;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +16,7 @@ import java.util.Optional;
  *
  * @author USER
  */
-public class CarritoCompras implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class CarritoCompras {
 
     private int id;
     private Cliente cliente;
@@ -65,12 +62,12 @@ public class CarritoCompras implements Serializable {
 
         calcularTotal();
     }
-//Elimina cualquier item cuyo id coincida. Luego recalcula el total del carrito
+    //Elimina cualquier item cuyo id coincida. Luego recalcula el total del carrito
     public void removerItem(int productoId) {
         items.removeIf(item -> item.getProducto().getId() == productoId);
         calcularTotal();
     }
-//busca item del producto, luego verifica si el nuevo stock esta disponible si se puede actualiza la cantidad
+    //busca item del producto, luego verifica si el nuevo stock esta disponible si se puede actualiza la cantidad
     public void actualizarCantidad(int productoId, int nuevaCantidad) {
         items.stream()
                 .filter(item -> item.getProducto().getId() == productoId)
@@ -84,19 +81,19 @@ public class CarritoCompras implements Serializable {
                     }
                 });
     }
-//suma todos los subtotales, actauliza el atributo subtotal y devuelve el tota del carrito
+    //suma todos los subtotales, actauliza el atributo subtotal y devuelve el tota del carrito
     public double calcularTotal() {
         this.subtotal = items.stream()
                 .mapToDouble(ItemCarrito::calcularSubtotal)
                 .sum();
         return subtotal;
     }
-//limpia el carrito eliminando todos los items
+    //limpia el carrito eliminando todos los items
     public void vaciar() {
         items.clear();
         subtotal = 0.0;
     }
-//convierte el carrito en un pedido
+    //convierte el carrito en un pedido
     public Pedido convertirAPedido() {
         if (items.isEmpty()) {
             throw new IllegalStateException("El carrito está vacío");

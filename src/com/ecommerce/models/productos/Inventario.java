@@ -4,18 +4,13 @@
  */
 package com.ecommerce.models.productos;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Inventario implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Inventario {
 
     private int id;
     private Producto producto;
     private int stockActual;
-    private int stockMinimo;
-    private int stockMaximo;
     private LocalDateTime ultimaActualizacion;
     
     //Sirve para: crear inventario vacío
@@ -23,16 +18,15 @@ public class Inventario implements Serializable {
     }
 
     //Crear inventario con stock inicial
-    public Inventario(Producto producto, int stockInicial) {
+    public Inventario(Producto producto, int stockActual) {
         this.producto = producto;
-        this.stockActual = stockInicial;
-        this.stockMinimo = 10;
-        this.stockMaximo = 1000;
+        this.stockActual = stockActual;
+
         this.ultimaActualizacion = LocalDateTime.now();
     }
 
     public void agregarStock(int cantidad) {
-        if (cantidad > 0 && stockActual + cantidad <= stockMaximo) {
+        if (cantidad > 0) {
             this.stockActual += cantidad;
             this.ultimaActualizacion = LocalDateTime.now();
         } else {
@@ -48,10 +42,6 @@ public class Inventario implements Serializable {
         }
         System.err.println("Error: No hay suficiente stock para reducir.");
         return false;
-    }
-
-    public boolean necesitaReposicion() {
-        return stockActual <= stockMinimo;
     }
 
     public boolean verificarDisponibilidad(int cantidadRequerida) {
@@ -81,22 +71,6 @@ public class Inventario implements Serializable {
     
     public void setStockActual(int stockActual) {
         this.stockActual = stockActual;
-    }
-
-    public int getStockMinimo() {
-        return stockMinimo;
-    }
-   
-    public void setStockMinimo(int stockMinimo) {
-        this.stockMinimo = stockMinimo;
-    }
-
-    public int getStockMaximo() {
-        return stockMaximo;
-    }
-
-    public void setStockMaximo(int stockMaximo) {
-        this.stockMaximo = stockMaximo;
     }
 
     public LocalDateTime getUltimaActualizacion() {

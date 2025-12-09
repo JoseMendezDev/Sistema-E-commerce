@@ -5,51 +5,34 @@
 package com.ecommerce.models.envios;
 
 import com.ecommerce.models.abstracto.Transporte;
-import java.io.Serializable;
 
 /**
  *
  * @author USER
  */
-public class Automovil extends Transporte implements Serializable {
+public class Automovil extends Transporte {
 
-    private static final long serialVersionUID = 1L;
-
-    private int numeroPuertas;
-    private boolean tieneMaletero;
+    private String descripcion;
 
     public Automovil() {
-        super("", "", 0);
+        super();
     }
 
-    public Automovil(String matricula, String modelo, int capacidadKg, int numeroPuertas, boolean tieneMaletero) {
-        super(matricula, modelo, capacidadKg);
-        this.numeroPuertas = numeroPuertas;
-        this.tieneMaletero = tieneMaletero;
+    public Automovil(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
     }
 
     @Override
-    public int calcularCapacidad() {
-        int capacidad = capacidadKg;
-        if (tieneMaletero) {
-            capacidad += 50; // Bonus por maletero
-        }
-        return capacidad;
+    public boolean verificarDisponibilidad() {
+        return true;
     }
 
-    public int getNumeroPuertas() {
-        return numeroPuertas;
-    }
-
-    public boolean isTieneMaletero() {
-        return tieneMaletero;
-    }
-
-    public void setNumeroPuertas(int numeroPuertas) {
-        this.numeroPuertas = numeroPuertas;
-    }
-
-    public void setTieneMaletero(boolean tieneMaletero) {
-        this.tieneMaletero = tieneMaletero;
+    @Override
+    public String toString() {
+        return descripcion;
     }
 }

@@ -10,8 +10,8 @@ package com.ecommerce.models.pagos;
  */
 public enum EstadoPago {
     PENDIENTE, 
-    PROCESANDO, 
-    COMPLETADO, 
-    FALLIDO, 
+    APROBADO, 
+    RECHAZADO, 
+    CANCELADO, 
     REEMBOLSADO
 }

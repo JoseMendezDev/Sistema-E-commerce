@@ -5,38 +5,43 @@
 package com.ecommerce.models.usuarios;
 
 import com.ecommerce.models.abstracto.Usuario;
-import com.ecommerce.models.abstracto.Transporte;
+import com.ecommerce.models.envios.Automovil;
 import com.ecommerce.models.pedidos.Pedido;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Repartidor extends Usuario {
 
-    private static final long serialVersionUID = 1L;
-
     private String licencia;
-    private boolean enServicio;
+    private boolean disponible;
     private List<Pedido> pedidosAsignados;
-    private Transporte vehiculo;
+    private Automovil vehiculo;
+    private boolean activo = true;
+    
+    public Repartidor(int id){
+        this.id = id;
+        this.activo = true;
+    }
 
     //Crear un repartidor sin datos completos.
     public Repartidor() {
         super();
         this.pedidosAsignados = new ArrayList<>();
-        this.enServicio = false;
+        this.disponible = true;
+        this.activo = true;
     }
 
     //Crear un repartidor listo para trabajar
-    public Repartidor(String email, String password, String nombre, String telefono, String licencia, Transporte vehiculo) {
+    public Repartidor(String email, String password, String nombre, String telefono, Automovil vehiculo) {
         super(email, password, nombre, telefono);
-        this.licencia = licencia;
         this.vehiculo = vehiculo;
         this.pedidosAsignados = new ArrayList<>();
-        this.enServicio = false;
+        this.disponible = true;
+        this.activo = true;
     }
 
     public void aceptarPedido(Pedido pedido) {
-        if (enServicio && vehiculo.verificarDisponibilidad()) {
+        if (disponible && vehiculo.verificarDisponibilidad()) {
             pedidosAsignados.add(pedido);
             System.out.println("Pedido #" + pedido.getId() + " aceptado por " + nombre);
         }
@@ -49,16 +54,10 @@ public class Repartidor extends Usuario {
         }
     }
 
-    public void actualizarUbicacion() {
-        if (enServicio) {
-            System.out.println("Ubicación actualizada para repartidor " + nombre);
-        }
-    }
-
     @Override
     public void cerrarSesion() {
         this.autenticado = false;
-        this.enServicio = false;
+        this.disponible = true;
         System.out.println("Repartidor " + nombre + " ha cerrado sesión");
     }
 
@@ -67,23 +66,32 @@ public class Repartidor extends Usuario {
         return licencia;
     }
 
-    public boolean isEnServicio() {
-        return enServicio;
+    public boolean isDisponible() {
+        return this.disponible;
     }
 
-    public void setEnServicio(boolean enServicio) {
-        this.enServicio = enServicio;
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
     }
+    
+    public boolean isActivo() {
+        return activo;
+    }
+    
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
 
     public List<Pedido> getPedidosAsignados() {
         return new ArrayList<>(pedidosAsignados);
     }
 
-    public Transporte getVehiculo() {
+    public Automovil getVehiculo() {
         return vehiculo;
     }
 
-    public void setVehiculo(Transporte vehiculo) {
+    public void setVehiculo(Automovil vehiculo) {
         this.vehiculo = vehiculo;
     }
 }

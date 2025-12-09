@@ -10,8 +10,6 @@ package com.ecommerce.interfaces;
  */
 public interface IEnviable {
 
-    double calcularCostoEnvio();
-
     void actualizarEstadoEnvio();
 
     int obtenerTiempoEstimado();

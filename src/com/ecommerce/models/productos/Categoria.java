@@ -5,25 +5,20 @@
 package com.ecommerce.models.productos;
 
 import com.ecommerce.interfaces.IBuscable;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Categoria implements IBuscable<Producto>, Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Categoria implements IBuscable<Producto> {
 
     private int id;
     private String nombre;
     private String descripcion;
-    private Categoria categoriaPadre;
-    private List<Categoria> subcategorias;
     private List<Producto> productos;
+    private boolean activo = true;
 
     public Categoria() {
-        this.subcategorias = new ArrayList<>();
         this.productos = new ArrayList<>();
     }
 
@@ -31,11 +26,6 @@ public class Categoria implements IBuscable<Producto>, Serializable {
         this();
         this.nombre = nombre;
         this.descripcion = descripcion;
-    }
-
-    public void agregarSubcategoria(Categoria subcategoria) {
-        subcategoria.setCategoriaPadre(this);
-        this.subcategorias.add(subcategoria);
     }
 
     public void agregarProducto(Producto producto) {
@@ -112,19 +102,15 @@ public class Categoria implements IBuscable<Producto>, Serializable {
         this.descripcion = descripcion;
     }
 
-    public Categoria getCategoriaPadre() {
-        return categoriaPadre;
-    }
-
-    public void setCategoriaPadre(Categoria categoriaPadre) {
-        this.categoriaPadre = categoriaPadre;
-    }
-
-    public List<Categoria> getSubcategorias() {
-        return new ArrayList<>(subcategorias);
-    }
-
     public List<Producto> getProductos() {
         return new ArrayList<>(productos);
+    }
+    
+    public boolean getActivo() {
+        return activo;
+    }
+    
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }

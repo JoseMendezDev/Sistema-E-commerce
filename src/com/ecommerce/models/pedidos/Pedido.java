@@ -6,7 +6,6 @@ package com.ecommerce.models.pedidos;
 
 import com.ecommerce.models.usuarios.Cliente;
 import com.ecommerce.models.productos.Producto;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +14,8 @@ import java.util.List;
  *
  * @author USER
  */
-public class Pedido implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class Pedido {
+    
     private int id;
     private Cliente cliente;
     private String direccionEnvio;
@@ -27,6 +24,10 @@ public class Pedido implements Serializable {
     private EstadoPedido estado;
     private LocalDateTime fechaPedido;
 
+    public Pedido(int id) {
+        this.id = id;
+    }
+    
     public Pedido() {
         this.detalles = new ArrayList<>();
         this.fechaPedido = LocalDateTime.now();

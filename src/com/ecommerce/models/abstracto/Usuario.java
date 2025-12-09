@@ -5,22 +5,22 @@
 package com.ecommerce.models.abstracto;
 
 import com.ecommerce.interfaces.IAutenticable;
+
 import java.time.LocalDateTime;
-import java.io.Serializable;
+
 
 /**
  *
  * @author USER
  */
-public abstract class Usuario implements IAutenticable, Serializable {
-
-    private static final long serialVersionUID = 1L;
+public abstract class Usuario implements IAutenticable {
 
     protected int id;
     protected String email;
     protected String password;
     protected String nombre;
     protected String telefono;
+
     protected LocalDateTime fechaRegistro;
     protected boolean autenticado;
     
@@ -29,6 +29,8 @@ public abstract class Usuario implements IAutenticable, Serializable {
         this.fechaRegistro = LocalDateTime.now();
         this.autenticado = false;
     }
+    
+
     
     //Crear un usuario con datos completos
     public Usuario(String email, String password, String nombre, String telefono) {

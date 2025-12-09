@@ -8,7 +8,6 @@ import com.ecommerce.models.abstracto.Usuario;
 import com.ecommerce.models.carrito.CarritoCompras;
 import com.ecommerce.models.carrito.ItemCarrito;
 import com.ecommerce.models.pedidos.Pedido;
-import com.ecommerce.models.pedidos.DetallePedido;
 import com.ecommerce.models.pedidos.EstadoPedido;
 import com.ecommerce.models.productos.Producto;
 import java.time.LocalDateTime;
@@ -17,8 +16,6 @@ import java.util.List;
 
 
 public class Cliente extends Usuario {
-
-    private static final long serialVersionUID = 1L;
 
     private String direccionEnvio;
     private List<Pedido> historialPedidos;

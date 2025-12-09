@@ -5,78 +5,76 @@
 package com.ecommerce.models.usuarios;
 
 import com.ecommerce.models.abstracto.Usuario;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 public class Administrador extends Usuario {
 
-    private static final long serialVersionUID = 1L;
+    private boolean activo;
+    private LocalDateTime fechaCreacion;
 
-    private String nivel;
-    private List<String> permisos;
-
-    //Crear un administrador básico con el constructor de la clase padre.
+    //Crear un administrador básico.
     public Administrador() {
-        super();
-        this.permisos = new ArrayList<>();
+        this.activo = true;
+        this.fechaCreacion = LocalDateTime.now();
     }
-
-    //Crear un administrador con nivel y permisos.
-    public Administrador(String email, String password, String nombre, String telefono, String nivel) {
-        super(email, password, nombre, telefono);
-        this.nivel = nivel;
-        this.permisos = new ArrayList<>();
-        inicializarPermisos();
-    }
-
-    //Llenar la lista de permisos que tendrá un usuario
-    private void inicializarPermisos() {
-        permisos.add("GESTIONAR_PRODUCTOS");
-        permisos.add("GESTIONAR_INVENTARIO");
-        permisos.add("VER_REPORTES");
-        permisos.add("GESTIONAR_USUARIOS");
-    }
-
-    public void gestionarProductos() {
-        if (tienePermiso("GESTIONAR_PRODUCTOS")) {
-            System.out.println("Gestionando productos...");
-        }
-    }
-
-    public void gestionarInventario() {
-        if (tienePermiso("GESTIONAR_INVENTARIO")) {
-            System.out.println("Gestionando inventario...");
-        }
-    }
-
-    public void verReportes() {
-        if (tienePermiso("VER_REPORTES")) {
-            System.out.println("Visualizando reportes...");
-        }
-    }
-
-    public void gestionarUsuarios() {
-        if (tienePermiso("GESTIONAR_USUARIOS")) {
-            System.out.println("Gestionando usuarios...");
-        }
-    }
-
-    private boolean tienePermiso(String permiso) {
-        return permisos.contains(permiso);
-    }
-
+    
     @Override
     public void cerrarSesion() {
         this.autenticado = false;
         System.out.println("Administrador " + nombre + " ha cerrado sesión");
     }
 
-    // Getters y Setters
-    public String getNivel() {
-        return nivel;
+    public int getId() {
+        return id;
     }
 
-    public List<String> getPermisos() {
-        return new ArrayList<>(permisos);
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("Administrador{id=%d, nombre='%s', email='%s'}",
+            id, nombre, email);
     }
 }

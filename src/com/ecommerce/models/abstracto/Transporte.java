@@ -4,53 +4,33 @@
  */
 package com.ecommerce.models.abstracto;
 
-import java.io.Serializable;
-
 /**
  *
  * @author USER
  */
-public abstract class Transporte implements Serializable {
+public abstract class Transporte {
 
-    private static final long serialVersionUID = 1L;
-
-    protected String matricula;
+    protected String tipo;
     protected String modelo;
-    protected int capacidadKg;
-    protected boolean disponible;
     
+    public Transporte() {
+        
+    }
     //Crear un vehículo de reparto.
-    public Transporte(String matricula, String modelo, int capacidadKg) {
-        this.matricula = matricula;
+    public Transporte(String tipo, String modelo) {
+        this.tipo = tipo;
         this.modelo = modelo;
-        this.capacidadKg = capacidadKg;
-        this.disponible = true;
     }
-
-    public boolean verificarDisponibilidad() {
-        return disponible;
+    
+    public boolean verificarDisponibilidad(){
+        return true;
     }
-
-    public abstract int calcularCapacidad();
-
-    // Getters y Setters
-    public String getMatricula() {
-        return matricula;
+    
+    public String getTipo() {
+        return tipo;
     }
 
     public String getModelo() {
         return modelo;
-    }
-
-    public int getCapacidadKg() {
-        return capacidadKg;
-    }
-
-    public boolean isDisponible() {
-        return disponible;
-    }
-
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
     }
 }
