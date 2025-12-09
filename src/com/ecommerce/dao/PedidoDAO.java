@@ -21,7 +21,6 @@ import java.util.List;
 public class PedidoDAO extends BaseDAO<Pedido> {
 
     private ClienteDAO clienteDAO = new ClienteDAO();
-    private DetallePedidoDAO detallePedidoDAO = new DetallePedidoDAO();
     private ProductoDAO productoDAO = new ProductoDAO();
 
     @Override
@@ -69,7 +68,9 @@ public class PedidoDAO extends BaseDAO<Pedido> {
         }
         return pedidos;
     }
-
+    
+    
+    //TODO: sirve?
     public List<Pedido> buscarPorEstado(String estado) throws SQLException {
         List<Pedido> pedidos = new ArrayList<>();
         String sql = "SELECT * FROM pedidos WHERE estado = ? ORDER BY fecha_pedido DESC";
@@ -90,6 +91,31 @@ public class PedidoDAO extends BaseDAO<Pedido> {
         return buscarPorEstado(estado.toString());
     }
 
+    public List<Pedido> obtenerPedidosPorUsuario(Integer usuarioId) throws SQLException {
+        List<Pedido> pedidos = new ArrayList<>();
+
+        if (usuarioId == null || usuarioId <= 0) {
+            return pedidos;
+        }
+
+        String sql = "SELECT id, cliente_id, direccion_envio, total, estado, fecha_pedido "
+                + "FROM pedidos WHERE cliente_id = ? "
+                + "ORDER BY fecha_pedido DESC";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, usuarioId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Pedido pedido = mapearPedido(rs);
+                    pedidos.add(pedido);
+                }
+            }
+        }
+
+        return pedidos;
+    }
+    
     @Override
     public boolean insertar(Pedido pedido) throws SQLException {
         String sql = "INSERT INTO pedidos (cliente_id, direccion_envio, total, estado, fecha_pedido) VALUES (?, ?, ?, ?, GETDATE())";
@@ -166,20 +192,21 @@ public class PedidoDAO extends BaseDAO<Pedido> {
         }
     }
 
-    public boolean actualizarEstado(int pedidoId, String nuevoEstado) throws SQLException {
+    public boolean actualizarEstado(int pedidoId, EstadoPedido nuevoEstado) throws SQLException {
         String sql = "UPDATE pedidos SET estado = ? WHERE id = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setString(1, nuevoEstado);
+            ps.setString(1, nuevoEstado.name());
             ps.setInt(2, pedidoId);
 
             return ps.executeUpdate() > 0;
         }
+        catch (SQLException e) {
+        System.out.println("Error actualizando estado de pedido: " + e.getMessage());
+        return false;
     }
-
-    public boolean actualizarEstado(int pedidoId, EstadoPedido nuevoEstado) throws SQLException {
-        return actualizarEstado(pedidoId, nuevoEstado.toString());
     }
+    
 
     @Override
     public boolean eliminar(int id) throws SQLException {
@@ -189,38 +216,6 @@ public class PedidoDAO extends BaseDAO<Pedido> {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         }
-    }
-
-    private Pedido mapearPedido(ResultSet rs) throws SQLException {
-        Pedido pedido = new Pedido();
-        pedido.setId(rs.getInt("id"));
-
-        int clienteId = rs.getInt("cliente_id");
-        Cliente cliente = clienteDAO.buscarPorId(clienteId);
-        pedido.setCliente(cliente);
-
-        pedido.setDireccionEnvio(rs.getString("direccion_envio"));
-        pedido.setTotal(rs.getDouble("total"));
-
-        String estadoStr = rs.getString("estado");
-
-        try {
-            pedido.setEstado(EstadoPedido.valueOf(estadoStr));
-        } catch (IllegalArgumentException e) {
-            System.err.println("Estado no reconocido: " + estadoStr + ". Usando CREADO como default.");
-            pedido.setEstado(EstadoPedido.CREADO);
-        }
-
-        Timestamp ts = rs.getTimestamp("fecha_pedido");
-        if (ts != null) {
-            pedido.setFechaPedido(ts.toLocalDateTime());
-        } else {
-            pedido.setFechaPedido(LocalDateTime.now());
-        }
-
-        cargarDetalles(pedido);
-
-        return pedido;
     }
 
     private void cargarDetalles(Pedido pedido) throws SQLException {
@@ -239,7 +234,6 @@ public class PedidoDAO extends BaseDAO<Pedido> {
                     DetallePedido detalle = new DetallePedido();
                     detalle.setId(rs.getInt("id"));
 
-                    // Obtener producto
                     int productoId = rs.getInt("producto_id");
                     Producto producto = productoDAO.buscarPorId(productoId);
 
@@ -280,5 +274,49 @@ public class PedidoDAO extends BaseDAO<Pedido> {
             }
         }
         return detalles;
+    }
+    
+    public void actualizarEstadoPedido(int id, EstadoPedido estado){
+    		
+    String sql = "UPDATE pedidos SET estado = ? WHERE id = ?";
+
+    try(PreparedStatement ps = conexion.prepareStatement(sql)){
+        ps.setString(1, estado.name());
+        ps.setInt(2, id);
+        ps.executeUpdate();
+
+    }catch(Exception e){
+        System.out.println("Error actualizando pedido: "+e.getMessage());
+    }
+}
+
+    private Pedido mapearPedido(ResultSet rs) throws SQLException {
+        Pedido pedido = new Pedido();
+        pedido.setId(rs.getInt("id"));
+
+        int clienteId = rs.getInt("cliente_id");
+        Cliente cliente = clienteDAO.buscarPorId(clienteId);
+        pedido.setCliente(cliente);
+
+        pedido.setDireccionEnvio(rs.getString("direccion_envio"));
+        pedido.setTotal(rs.getDouble("total"));
+
+        String estadoStr = rs.getString("estado");
+
+        try {
+            pedido.setEstado(EstadoPedido.valueOf(estadoStr));
+        } catch (IllegalArgumentException e) {
+            System.err.println("Estado no reconocido: " + estadoStr + ". Usando CREADO como default.");
+            pedido.setEstado(EstadoPedido.CREADO);
+        }
+
+        Timestamp ts = rs.getTimestamp("fecha_pedido");
+        if (ts != null) {
+            pedido.setFechaPedido(ts.toLocalDateTime());
+        } else {
+            pedido.setFechaPedido(LocalDateTime.now());
+        }
+
+        return pedido;
     }
 }

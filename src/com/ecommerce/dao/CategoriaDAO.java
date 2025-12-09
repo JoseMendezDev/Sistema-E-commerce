@@ -34,20 +34,23 @@ public class CategoriaDAO extends BaseDAO<Categoria> {
     @Override
     public List<Categoria> buscarTodos() throws SQLException {
         List<Categoria> categorias = new ArrayList<>();
-        String sql = "SELECT * FROM categorias WHERE activo = true";
+        String sql = "SELECT * FROM categorias WHERE activo = 1";
 
-        try (Statement stmt = conexion.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (PreparedStatement ps = conexion.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                categorias.add(mapearCategoria(rs));
+                Categoria c = new Categoria();
+                c.setId(rs.getInt("id"));
+                c.setNombre(rs.getString("nombre"));
+                categorias.add(c);
             }
         }
         return categorias;
     }
 
-    public List<Categoria> buscarPrincipales() throws SQLException {
+    public List<Categoria> buscarCategorias() throws SQLException {
         List<Categoria> categorias = new ArrayList<>();
-        String sql = "SELECT * FROM categorias WHERE categoria_padre_id IS NULL AND activo = true";
+        String sql = "SELECT * FROM categorias WHERE activo = 1";
 
         try (Statement stmt = conexion.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -56,37 +59,15 @@ public class CategoriaDAO extends BaseDAO<Categoria> {
             }
         }
         return categorias;
-    }
-
-    public List<Categoria> buscarSubcategorias(int categoriaPadreId) throws SQLException {
-        List<Categoria> subcategorias = new ArrayList<>();
-        String sql = "SELECT * FROM categorias WHERE categoria_padre_id = ? AND activo = true";
-
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, categoriaPadreId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    subcategorias.add(mapearCategoria(rs));
-                }
-            }
-        }
-        return subcategorias;
     }
 
     @Override
     public boolean insertar(Categoria categoria) throws SQLException {
-        String sql = "INSERT INTO categorias (nombre, descripcion, categoria_padre_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, categoria.getNombre());
             ps.setString(2, categoria.getDescripcion());
-
-            if (categoria.getCategoriaPadre() != null) {
-                ps.setInt(3, categoria.getCategoriaPadre().getId());
-            } else {
-                ps.setNull(3, Types.INTEGER);
-            }
 
             int filasAfectadas = ps.executeUpdate();
 
@@ -104,19 +85,12 @@ public class CategoriaDAO extends BaseDAO<Categoria> {
 
     @Override
     public boolean actualizar(Categoria categoria) throws SQLException {
-        String sql = "UPDATE categorias SET nombre = ?, descripcion = ?, categoria_padre_id = ? WHERE id = ?";
+        String sql = "UPDATE categorias SET nombre = ?, descripcion = ? WHERE id = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, categoria.getNombre());
             ps.setString(2, categoria.getDescripcion());
-
-            if (categoria.getCategoriaPadre() != null) {
-                ps.setInt(3, categoria.getCategoriaPadre().getId());
-            } else {
-                ps.setNull(3, Types.INTEGER);
-            }
-
-            ps.setInt(4, categoria.getId());
+            ps.setInt(3, categoria.getId());
 
             return ps.executeUpdate() > 0;
         }
@@ -124,7 +98,7 @@ public class CategoriaDAO extends BaseDAO<Categoria> {
 
     @Override
     public boolean eliminar(int id) throws SQLException {
-        String sql = "UPDATE categorias SET activo = false WHERE id = ?";
+        String sql = "UPDATE categorias SET activo = 0 WHERE id = ?";
         
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -137,13 +111,7 @@ public class CategoriaDAO extends BaseDAO<Categoria> {
         categoria.setId(rs.getInt("id"));
         categoria.setNombre(rs.getString("nombre"));
         categoria.setDescripcion(rs.getString("descripcion"));
-        
-        int categoriaPadreId = rs.getInt("categoria_padre_id");
-        if (!rs.wasNull()) {
-            Categoria padre = buscarPorId(categoriaPadreId);
-            categoria.setCategoriaPadre(padre); 
-        }
-        
+                
         return categoria;
     }
 }

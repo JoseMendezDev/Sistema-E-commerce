@@ -35,7 +35,6 @@ public class ClienteDAO extends BaseDAO<Cliente> {
         return null;
     }
 
-    //TODO: Implementar
     public Cliente buscarPorEmail(String email) throws SQLException {
         String sql = "SELECT * FROM clientes WHERE email = ?";
         PreparedStatement ps = null;
@@ -55,7 +54,6 @@ public class ClienteDAO extends BaseDAO<Cliente> {
         return null;
     }
 
-    //TODO: IMPLEMENTAR sp buscarTodos para administrador
     @Override
     public List<Cliente> buscarTodos() throws SQLException {
         List<Cliente> clientes = new ArrayList<>();
@@ -73,7 +71,6 @@ public class ClienteDAO extends BaseDAO<Cliente> {
     @Override
     public boolean insertar(Cliente cliente) throws SQLException {
         String sql = "INSERT INTO clientes (email, password, nombre, telefono, direccion_envio) VALUES (?, ?, ?, ?, ?)";
-
         try (PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, cliente.getEmail());
             ps.setString(2, cliente.getPassword());
@@ -131,18 +128,15 @@ public class ClienteDAO extends BaseDAO<Cliente> {
         return false;
     }
 
-    //TODO : IMPLEMENTAR EN MENU
     @Override
     public boolean actualizar(Cliente cliente) throws SQLException {
-        String sql = "UPDATE clientes SET email = ?, password = ?, nombre = ?, telefono = ?, direccion_envio = ? WHERE id = ?";
+        String sql = "UPDATE clientes SET nombre = ?, telefono = ?, direccion_envio = ? WHERE id = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setString(1, cliente.getEmail());
-            ps.setString(2, cliente.getPassword());
-            ps.setString(3, cliente.getNombre());
-            ps.setString(4, cliente.getTelefono());
-            ps.setString(5, cliente.getDireccionEnvio());
-            ps.setInt(6, cliente.getId());
+            ps.setString(1, cliente.getNombre());
+            ps.setString(2, cliente.getTelefono());
+            ps.setString(3, cliente.getDireccionEnvio());
+            ps.setInt(4, cliente.getId());
 
             return ps.executeUpdate() > 0;
         }
@@ -179,6 +173,24 @@ public class ClienteDAO extends BaseDAO<Cliente> {
             stmt.setInt(1, id);
             return stmt.executeUpdate() > 0;
         }
+    }
+    
+    public boolean activarDesactivarCliente(int idCliente, boolean activo) throws SQLException {
+    String sql = "UPDATE clientes SET activo = ? WHERE id = ?";
+
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setBoolean(1, activo);
+        ps.setInt(2, idCliente);
+
+        return ps.executeUpdate() > 0;
+    }
+}
+
+
+    public static void verTodosRepartidores() {
+    }
+
+    public static void activarDesactivarRepartidor() {
     }
 
     private Cliente mapearCliente(ResultSet rs) throws SQLException {
