@@ -19,4 +19,4 @@ Sistema de comercio electrónico desarrollado en java, enfocado en programación
 
 ## UML
 
-- [Diagrama UML](https://app.diagrams.net/#G1nKL0B9mNzXg9N7pQK20cnPf3wvv2S_Jo)
+- [Diagrama UML]([https://app.diagrams.net/#G1nKL0B9mNzXg9N7pQK20cnPf3wvv2S_Jo](https://app.diagrams.net/#G1Zo5wmoQByoAo8blBIMPf0gOvxIAz6lPa#%7B%22pageId%22%3A%22lr8ho6xC7EfM3syteaPK%22%7D)
